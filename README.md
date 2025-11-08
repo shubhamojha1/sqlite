@@ -26,3 +26,10 @@ B-Tree - Many nodes. Each node is one page in length. Can retrieve a page from d
 Pager - Recieves commands to read/write pages of data. Responsible for reading/writing at appropriate offsets in the database file. Also maintains a cache, and determines when to delete pages or write back on disk
 
 OS Interface - Depends on the OS sqlite was compiled for.
+
+SQLite Architecture- 
+![alt text](image-1.png)
+
+Advantages of decoupling into frontend and backend-
+- Reduced complexity (Virtual Machine does not worry about syntax errors)
+- Allows compiling common queries once and caching the bytecode
