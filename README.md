@@ -3,3 +3,26 @@ A sqlite clone
 
 A step by step implementation of a dummy sqlite
 Reference: https://cstack.github.io/db_tutorial/
+
+![alt text](image.png)
+
+Frontend:-
+- Tokenizer
+- Parser
+- Code generator
+
+SQL Query -> Frontend -> Sqlite virtual machine bytecode (compiled program that can operate on the database)
+
+Backend:-
+- Virtual machine
+- B-Tree
+- Pager
+- OS Interface
+
+Virtual Machine - Takes bytecode from frontend as instructions. Performs operations on tables or indexes, stored in a B-Tree. Essentially a big switch statement on the type of bytecode instruction.
+
+B-Tree - Many nodes. Each node is one page in length. Can retrieve a page from disk or save it back on disk by issuing commands to pager
+
+Pager - Recieves commands to read/write pages of data. Responsible for reading/writing at appropriate offsets in the database file. Also maintains a cache, and determines when to delete pages or write back on disk
+
+OS Interface - Depends on the OS sqlite was compiled for.
