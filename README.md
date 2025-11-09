@@ -4,7 +4,7 @@ A sqlite clone
 A step by step implementation of a dummy sqlite
 Reference: https://cstack.github.io/db_tutorial/
 
-![alt text](image.png)
+![alt text](assets/image.png)
 
 Frontend:-
 - Tokenizer
@@ -28,7 +28,7 @@ Pager - Recieves commands to read/write pages of data. Responsible for reading/w
 OS Interface - Depends on the OS sqlite was compiled for.
 
 SQLite Architecture- 
-![alt text](image-1.png)
+![alt text](assets/image-1.png)
 
 Advantages of decoupling into frontend and backend-
 - Reduced complexity (Virtual Machine does not worry about syntax errors)
