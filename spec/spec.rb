@@ -28,3 +28,5 @@ describe 'database' do
     ])
   end
 end
+
+#  rspec .\spec\spec.rb
