@@ -209,7 +209,7 @@ void print_instructions(){
 int main(int argc, char* argv[]){
     Table* table = new_table();
     InputBuffer* input_buffer = new_input_buffer();
-    print_instructions();
+    // print_instructions();
     while(true){
         print_prompt();
         read_input(input_buffer);
