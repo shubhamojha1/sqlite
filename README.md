@@ -33,3 +33,10 @@ SQLite Architecture-
 Advantages of decoupling into frontend and backend-
 - Reduced complexity (Virtual Machine does not worry about syntax errors)
 - Allows compiling common queries once and caching the bytecode
+
+To get started-
+    Store rows in blocks of memory called pages
+    Each page stores as many rows as it can fit
+    Rows are serialized into a compact representation with each page
+    Pages are only allocated as needed
+    Keep a fixed-size array of pointers to pages
