@@ -67,9 +67,17 @@ const uint32_t TABLE_MAX_ROWS = ROWS_PER_PAGE * TABLE_MAX_PAGES;
 // this makes it easier to read/write rows.
 
 typedef struct {
+    int file_descriptor;
+    uint32_t file_length;
+    void* pages[TABLE_MAX_PAGES]
+} Pager; // accesses the page cache and the file. 
+
+typedef struct {
     uint32_t num_rows;
-    void* pages[TABLE_MAX_PAGES];
+    // void* pages[TABLE_MAX_PAGES];
+    Pager* pager;
 } Table; // keeps track of number of rows. along with pointers to each row
+        // will make requests for new pages through the pager object.
 
 void print_row(Row* row) {
     printf("(%d, %s, %s)\n", row->id, row->username, row->email);
@@ -214,9 +222,41 @@ ExecuteResult execute_statement(Statement* statement, Table* table){
     }
 }
 
-Table* new_table() {
-    Table* table = (Table*)malloc(sizeof(Table));
-    table->num_rows = 0;
+Pager* pager_open(const char* filename){
+    int fd = open(filename, 
+                    O_RDWR |     // Read/Write mode
+                        O_CREAT, // Create file if it does not exist
+                    S_IWUSR |   // User write permission
+                        S_IRUSR  // User read permission
+                    );
+    if (fd == -1){
+        printf("Unable to open file\n");
+        exit(EXIT_FAILURE);
+    }
+
+    off_t file_length = lseek(fd, 0, SEEK_END);
+
+    Pager* pager = malloc(sizeof(Pager));
+    pager->file_descriptor = fd;
+    pager->file_length = file_length;
+
+    for(uint32_t i=0; i < TABLE_MAX_PAGES; i++){
+        pager->pager[i] = NULL;
+    }
+
+    return pager;
+}
+
+Table* db_open(const char* filename) { // opens a connection to the database
+                   // - Opening the database file
+                   // - Initializing a pager data structure
+                   // - Initializing a table data structure
+    Pager* pager = pager_open(filename);
+    uint32_t num_rows = pager->file_length / ROW_SIZE;
+    Table* table = (Table*)malloc(sizeof(Table)); 
+    // table->num_rows = 0;
+    table->pager = pager;
+    table->num_rows = num_rows;
     for (uint32_t i =0; i < TABLE_MAX_PAGES; i++){
         table->pages[i] = NULL;
     }
