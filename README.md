@@ -41,10 +41,11 @@ To get started-
     Pages are only allocated as needed
     Keep a fixed-size array of pointers to pages
 
-Adding persistent-
+Adding persistence-
     Write the blocks of pages into a file
     Read them back into memory the next time program is loaded
-    
     Creating an abstraction, pager
     We ask it the page number x, it gives us a block of memory
     First look in its cache, if miss copies data from disk into memory (by reading the database file)
+
+![alt text](assets/image-2.png)
