@@ -17,6 +17,16 @@ typedef struct{
     ssize_t input_length; // size of input stored in buffer
 } InputBuffer;
 
+typedef struct {
+    Table* table;
+    uint32_t row_num;
+    bool end_of_table; // Indicates a position one past the last element
+} Cursor; 
+// Create a cursor at the beginning of the table
+// Create a cursor at the end of the table
+// Access the row the cursor is pointing to
+// Advance the cursor to the next row
+
 typedef enum {
     META_COMMAND_SUCCESS,
     META_COMMAND_UNRECOGNIZED_COMMAND
@@ -99,6 +109,23 @@ void deserialize_row(void* source, Row* destination){
     memcpy(&(destination->email), source + EMAIL_OFFSET, EMAIL_SIZE);
 }
 
+Cursor* table_start(Table* table){
+    Cursor* cursor = malloc(sizeof(Cursor));
+    cursor->table = table;
+    cursor->row_num = 0
+    cursor->end_of_table = (table->num_rows==0);
+
+    return cursor;
+}
+
+Cursor* table_end(Table* table){
+    Cursor* cursor = malloc(sizeof(Cursor));
+    cursor->table = table;
+    cursor->row_num = table->num_rows;
+    cursor->end_of_table = true;
+
+    return cursor;
+}
 void* get_page(Pager* pager, uint32_t page_num){
     if (page_num > TABLE_MAX_PAGES){
         printf("Tried to fetch page number out of bounds. %d > %d\n", page_num, TABLE_MAX_PAGES);
