@@ -1,7 +1,11 @@
 describe 'database' do
+  before do
+    `rm -rf test.db`
+  end
   def run_script(commands)
     raw_output = nil
-    IO.popen("./main", "r+") do |pipe|
+    # IO.popen("./main", "r+") do |pipe|
+    IO.popen("./main test.db", "r+") do |pipe|
       commands.each do |command|
         pipe.puts command
       end
@@ -100,6 +104,7 @@ describe 'database' do
       ])
       expect(result2).to match_array([
         "db > (1, user1, a@abc.com)",
+        "Executed.",
         "db > "
       ])
     end

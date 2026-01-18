@@ -47,5 +47,9 @@ Adding persistence-
     Creating an abstraction, pager
     We ask it the page number x, it gives us a block of memory
     First look in its cache, if miss copies data from disk into memory (by reading the database file)
+        - Save the entire database into a file
+        - Already serialized row sinto page-sized memory blocks.
+        - For persistence, we can simply write those blocks of memory to a file
+        - Read them back into memory the next time the program starts up
 
 ![alt text](assets/image-2.png)
