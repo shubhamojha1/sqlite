@@ -16,12 +16,7 @@ typedef struct{
     size_t buffer_length; // size of allocated buffer
     ssize_t input_length; // size of input stored in buffer
 } InputBuffer;
-
-typedef struct {
-    Table* table;
-    uint32_t row_num;
-    bool end_of_table; // Indicates a position one past the last element
-} Cursor; 
+ 
 // Create a cursor at the beginning of the table
 // Create a cursor at the end of the table
 // Access the row the cursor is pointing to
@@ -91,6 +86,12 @@ typedef struct {
 } Table; // keeps track of number of rows. along with pointers to each row
         // will make requests for new pages through the pager object.
 
+typedef struct {
+    Table* table;
+    uint32_t row_num;
+    bool end_of_table; // Indicates a position one past the last element
+} Cursor;
+
 void print_row(Row* row) {
     printf("(%d, %s, %s)\n", row->id, row->username, row->email);
 }
@@ -112,7 +113,7 @@ void deserialize_row(void* source, Row* destination){
 Cursor* table_start(Table* table){
     Cursor* cursor = malloc(sizeof(Cursor));
     cursor->table = table;
-    cursor->row_num = 0
+    cursor->row_num = 0;
     cursor->end_of_table = (table->num_rows==0);
 
     return cursor;
@@ -165,7 +166,7 @@ void* get_page(Pager* pager, uint32_t page_num){
 }
 
 // void* row_slot(Table* table, uint32_t row_num){
-void cursor_value(Cursor* cursor){ // Returns a pointer to the positon described by the cursor.
+void* cursor_value(Cursor* cursor){ // Returns a pointer to the positon described by the cursor.
 
     uint32_t row_num = cursor->row_num;
     // to figure out where to read/write in memory for a particular row
@@ -338,7 +339,7 @@ ExecuteResult execute_insert(Statement* statement, Table* table) {
 
     Row* row_to_insert = &(statement->row_to_insert);
     Cursor* cursor = table_end(table);
-    serialize_row(row_to_insert, row_slot(table, table->num_rows));
+    // serialize_row(row_to_insert, row_slot(table, table->num_rows));
     serialize_row(row_to_insert, cursor_value(cursor));
     table->num_rows +=1;
 
