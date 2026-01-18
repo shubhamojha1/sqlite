@@ -126,6 +126,14 @@ Cursor* table_end(Table* table){
 
     return cursor;
 }
+
+void cursor_advance(Cursor* cursor){
+    cursor->row_num += 1;
+    if(cursor->row_num >= cursor->table->num_rows){
+        cursor->end_of_table = true;
+    }
+}
+
 void* get_page(Pager* pager, uint32_t page_num){
     if (page_num > TABLE_MAX_PAGES){
         printf("Tried to fetch page number out of bounds. %d > %d\n", page_num, TABLE_MAX_PAGES);
@@ -156,7 +164,10 @@ void* get_page(Pager* pager, uint32_t page_num){
     return pager->pages[page_num];
 }
 
-void* row_slot(Table* table, uint32_t row_num){
+// void* row_slot(Table* table, uint32_t row_num){
+void cursor_value(Cursor* cursor){ // Returns a pointer to the positon described by the cursor.
+
+    uint32_t row_num = cursor->row_num;
     // to figure out where to read/write in memory for a particular row
     uint32_t page_num = row_num / ROWS_PER_PAGE;
     // void* page = table->pages[page_num];
@@ -164,7 +175,8 @@ void* row_slot(Table* table, uint32_t row_num){
         // allocate memory only when we try to access page
         // page = table->pages[page_num] = malloc(PAGE_SIZE);
     // }
-    void* page = get_page(table->pager, page_num);
+    // void* page = get_page(table->pager, page_num);
+    void* page = get_page(cursor->table->pager, page_num);
     uint32_t row_offset = row_num % ROWS_PER_PAGE;
     uint32_t byte_offset = row_offset * ROW_SIZE;
     return page + byte_offset;
